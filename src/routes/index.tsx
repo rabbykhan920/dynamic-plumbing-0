@@ -107,7 +107,7 @@ function CustomCursor() {
     const move = (e: MouseEvent) => setCursor(c => ({ ...c, x: e.clientX, y: e.clientY }));
     const over = (e: MouseEvent) => {
       const target = (e.target as HTMLElement).closest<HTMLElement>("[data-cursor], a, button");
-      setCursor(c => ({ ...c, active: Boolean(target), label: target?.dataset.cursor ?? "" }));
+      setCursor(c => ({ ...c, active: Boolean(target), label: target?.dataset["cursor"] ?? "" }));
     };
     window.addEventListener("mousemove", move); document.addEventListener("mouseover", over);
     return () => { window.removeEventListener("mousemove", move); document.removeEventListener("mouseover", over); };
@@ -162,6 +162,8 @@ function About() {
 
 function Services() {
   const [active, setActive] = useState(0);
+  const activeService = services.at(active);
+  if (!activeService) return null;
   return <section id="services" className="services section-pad">
     <motion.div {...reveal} className="services-head"><div><SectionLabel n="03">OUR SERVICES</SectionLabel><h2>BUILT AROUND<br/><span>WHAT YOU NEED.</span></h2></div><p>Select a service to explore our approach.</p></motion.div>
     <div className="service-experience">
@@ -169,7 +171,7 @@ function Services() {
         <span className="service-number">{service.n}</span><strong>{service.title}</strong><ChevronRight className="service-arrow"/>
         <AnimatePresence initial={false}>{active===i && <motion.p initial={{height:0,opacity:0}} animate={{height:"auto",opacity:1}} exit={{height:0,opacity:0}}>{service.body}</motion.p>}</AnimatePresence>
       </motion.button>)}</div>
-      <div className="service-preview" data-cursor="VIEW"><AnimatePresence mode="wait"><motion.img key={active} src={services[active].image} alt={services[active].title} initial={{opacity:0,scale:1.08}} animate={{opacity:1,scale:1}} exit={{opacity:0}} transition={{duration:.55}} loading="lazy" width={1200} height={1400}/></AnimatePresence><div className="preview-meta"><span>{services[active].n}</span><p>DYNAMIC<br/>SERVICE</p></div></div>
+      <div className="service-preview" data-cursor="VIEW"><AnimatePresence mode="wait"><motion.img key={active} src={activeService.image} alt={activeService.title} initial={{opacity:0,scale:1.08}} animate={{opacity:1,scale:1}} exit={{opacity:0}} transition={{duration:.55}} loading="lazy" width={1200} height={1400}/></AnimatePresence><div className="preview-meta"><span>{activeService.n}</span><p>DYNAMIC<br/>SERVICE</p></div></div>
     </div>
   </section>;
 }
